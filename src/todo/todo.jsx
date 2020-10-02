@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PageHeader from '../template/pageHeader'
 import TodoForm from './todoForm'
 import TodoList from './todoList'
@@ -7,44 +7,52 @@ import axios from 'axios';
 
 const URL = 'http://localhost:3000/api/todos'
 
-export default class Todo  extends Component{
+export default class Todo extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props)
         this.state = { description: '', list: [] }
 
         this.handleChange = this.handleChange.bind(this)
         this.handleAdd = this.handleAdd.bind(this)
+        this.handleRemove = this.handleRemove.bind(this)
         this.refresh()
     }
 
-    refresh(){
+    refresh() {
         axios.get(`${URL}?sort=-createAt`)
-        .then(res => this.setState({...this.state, description: '', list: res.data}))
+            .then(res => this.setState({ ...this.state, description: '', list: res.data }))
     }
 
-    handleChange(e){
-        this.setState({...this.state, description: e.target.value})
+    handleChange(e) {
+        this.setState({ ...this.state, description: e.target.value })
     }
 
-    handleAdd(){
-       
+    handleAdd() {
+
         const description = this.state.description
-        axios.post(URL, {description})
+        axios.post(URL, { description })
             .then(res => this.refresh())
     }
+    handleRemove(todo) {
+        axios.delete(`${URL}/${todo._id}`)
+        .then(res => this.refresh())
+    }
 
-    render(){
-        return(
+    render() {
+        return (
             <div>
-              <PageHeader name="Tarefas" small="Cadastro" />
-              <TodoForm 
-              description={this.state.description}
-              handleChange={this.handleChange}
-              handleAdd={this.handleAdd}
-              />
+                <PageHeader name="Tarefas" small="Cadastro" />
+                <TodoForm
+                    description={this.state.description}
+                    handleChange={this.handleChange}
+                    handleAdd={this.handleAdd}
+                />
 
-              <TodoList list={this.state.list} />
+                <TodoList
+                    list={this.state.list}
+                    handleRemove={this.handleRemove}
+                />
             </div>
         )
     }
