@@ -37,8 +37,13 @@ export const Button = styled.button<IStylesButton>`
 export const Input = styled.input`
   width: 90%;
   height: 40px;
-
+  padding-left: 8px;
   border-radius: 5px;
+
+  font-family: 'Roboto' sans-serif;
+  font-size: 18px;
+
+  color: ${(props) => props.theme['gray-800']};
 `
 
 export const Table = styled.table`

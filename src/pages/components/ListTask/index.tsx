@@ -1,11 +1,12 @@
-import { Container } from './styles'
+import { Container, Button } from './styles'
 import { ITaskType } from '../../todoList/Home'
+import { ArrowCounterClockwise, Check, Trash } from 'phosphor-react'
 
 interface IListTaskProps {
   listTask: ITaskType[]
   handleMarkAsDone: (id: any) => void
-  handleMarkAsPadding?: () => void
-  handleRemoveTask?: () => void
+  handleMarkAsPadding: (id: any) => void
+  handleRemoveTask: (id: any) => void
 }
 
 export function ListTask({
@@ -16,14 +17,31 @@ export function ListTask({
 }: IListTaskProps) {
   const tasks = listTask || []
 
-  const tbody = tasks.map((data: ITaskType) => {
+  const tbody = tasks.map((task: ITaskType) => {
     return (
-      <tr key={data?.id}>
-        <td className="description">{data?.description}</td>
+      <tr key={task?.id}>
+        <td className="description" id={task.action}>
+          {task?.description}
+        </td>
         <td>
-          <button onClick={() => handleMarkAsDone(data.id)}>Concluir</button>
-          <button onClick={handleMarkAsPadding}>Pendente</button>
-          <button onClick={handleRemoveTask}>Remover</button>
+          <Button
+            statusColor="success"
+            onClick={() => handleMarkAsDone(task.id)}
+          >
+            <Check size={30} />
+          </Button>
+          <Button
+            statusColor={task.action !== 'complete' ? 'disabled' : 'warning'}
+            onClick={() => handleMarkAsPadding(task.id)}
+          >
+            <ArrowCounterClockwise size={30} />
+          </Button>
+          <Button
+            statusColor="danger"
+            onClick={() => handleRemoveTask(task.id)}
+          >
+            <Trash size={30} />
+          </Button>
         </td>
       </tr>
     )

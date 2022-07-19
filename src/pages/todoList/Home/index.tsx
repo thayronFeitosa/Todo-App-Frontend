@@ -4,9 +4,12 @@ import { ListTask } from '../../components/ListTask'
 import { TodoForm } from '../../components/TodoForm'
 import { Container, ContainerForm, LayoutContainer } from './styles'
 
+export type typeActionTask = 'default' | 'pending' | 'complete'
+
 export interface ITaskType {
   id: string
   description: string
+  action?: typeActionTask | 'default'
 }
 
 export function TodoListHome() {
@@ -18,6 +21,7 @@ export function TodoListHome() {
     const newTask: ITaskType = {
       id: String(new Date().getTime()),
       description,
+      action: 'default',
     }
 
     setTask((task) => [...task, newTask])
@@ -25,8 +29,30 @@ export function TodoListHome() {
     setDescription('')
   }
 
-  function handleMarkAsDone(task: string) {
-    console.log('Done', task)
+  function handleMarkAsDone(id: string) {
+    const newArray = listTask.map((task) => {
+      if (task.id === id) {
+        task.action = 'complete'
+        return task
+      }
+      return task
+    })
+    setListTask(newArray)
+  }
+
+  function handleRemoveTask(id: string) {
+    setListTask(listTask.filter((task) => task.id !== id))
+  }
+
+  function handleMarkAsPadding(id: string) {
+    const newArray = listTask.map((task) => {
+      if (task.id === id) {
+        task.action = 'default'
+        return task
+      }
+      return task
+    })
+    setListTask(newArray)
   }
 
   function handleSearchTask() {
@@ -34,8 +60,6 @@ export function TodoListHome() {
       (data) => data?.description.indexOf(description) > -1,
     )
     setListTask(result)
-
-    console.log(result)
   }
 
   function handleChangeInput(e: any) {
@@ -59,7 +83,12 @@ export function TodoListHome() {
         />
       </ContainerForm>
 
-      <ListTask listTask={listTask} handleMarkAsDone={handleMarkAsDone} />
+      <ListTask
+        listTask={listTask}
+        handleMarkAsDone={handleMarkAsDone}
+        handleRemoveTask={handleRemoveTask}
+        handleMarkAsPadding={handleMarkAsPadding}
+      />
     </Container>
   )
 }
